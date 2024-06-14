@@ -49,7 +49,7 @@
     align-items: center;
   }
   
-  .taskItem.completed .taskText  {
+  .completedTask .taskText {
     text-decoration: line-through;
     color: #aaa;
   }
@@ -91,4 +91,12 @@
   .taskText {
     flex: 1;
     margin-left: 10px;
+  }
+
+  .dragging {
+    opacity: 0.5;
+  }
+
+  .dragOver {
+    border: 2px dashed #000;
   }
