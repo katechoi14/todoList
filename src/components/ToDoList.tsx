@@ -100,7 +100,7 @@ const TodoList: React.FC = () => {
 
   return (
     <div className={styles.todoContainer}>
-      <h2>Todo List</h2>
+      <h2 className={styles.heading}>Todo List</h2>
       <form className={styles.form} onSubmit={addTask}>
         <input
           type="text"
@@ -128,13 +128,13 @@ const TodoList: React.FC = () => {
           className="date-picker"
         />
       </form>
-      <ul>
+      <ul className={styles.taskList}>
         {tasks.map((task, index) => (
           <li
             key={task.id}
-            className={`${styles.taskItem} ${styles.taskItem.completed ? "completed" : ""} 
-            ${draggedIndex === index ? "dragging" : ""}
-            ${dragOverIndex === index ? "drag-over" : ""}`}
+            className={`${styles.taskItem} ${task.completed ? styles.completedTask : ""} 
+            ${draggedIndex === index ? styles.dragging : ""}
+            ${dragOverIndex === index ? styles.dragOver : ""}`}
             draggable
             onDragStart={(e) => handleDragStart(e, index)}
             onDragOver={(e) => handleDragOver(e, index)}
