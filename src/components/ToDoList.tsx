@@ -1,24 +1,33 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import styles from '../styles/style.module.css';
 
-export default function TodoList() {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
-  const [userName, setUserName] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [draggedIndex, setDraggedIndex] = useState(null);
-  const [dragOverIndex, setDragOverIndex] = useState(null);
+interface Task {
+  id: number;
+  text: string;
+  completed: boolean;
+  userName: string;
+  date: Date | null;
+}
 
-  function addTask(e) {
+const TodoList: React.FC = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [newTask, setNewTask] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  function addTask(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (newTask.trim() === "") {
       alert("New task cannot be empty!");
-      return 0;
+      return;
     }
 
-    const newT = {
+    const newT: Task = {
       id: new Date().getTime(),
       text: newTask,
       completed: false,
@@ -32,12 +41,12 @@ export default function TodoList() {
     setSelectedDate(null);
   }
 
-  const deleteTask = (index) => {
+  const deleteTask = (index: number) => {
     const updatedTasks = tasks.filter((_, i) => i !== index);
     setTasks(updatedTasks);
   };
 
-  const toggleTask = (index) => {
+  const toggleTask = (index: number) => {
     const updatedTasks = [...tasks];
     const toggledTask = updatedTasks[index];
     toggledTask.completed = !toggledTask.completed;
@@ -50,29 +59,31 @@ export default function TodoList() {
     setTasks(updatedTasks);
   };
 
-  const editTask = (index, newText) => {
+  const editTask = (index: number, newText: string | null) => {
     const updatedTasks = [...tasks];
-    updatedTasks[index].text = newText;
+    if (newText) {
+      updatedTasks[index].text = newText;
+    }
     setTasks(updatedTasks);
   };
 
-  const handleDragStart = (e, index) => {
+  const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", index.toString());
   };
 
-  const handleDragOver = (e, index) => {
+  const handleDragOver = (e: React.DragEvent<HTMLLIElement>, index: number) => {
     e.preventDefault();
     setDragOverIndex(index);
   };
 
-  const handleDrop = (e, index) => {
+  const handleDrop = (e: React.DragEvent<HTMLLIElement>, index: number) => {
     e.preventDefault();
     const fromIndex = draggedIndex;
     const toIndex = index;
 
-    if (fromIndex !== toIndex) {
+    if (fromIndex !== null && fromIndex !== toIndex) {
       const updatedTasks = [...tasks];
       const movedTask = updatedTasks.splice(fromIndex, 1)[0];
       updatedTasks.splice(toIndex, 0, movedTask);
@@ -88,20 +99,20 @@ export default function TodoList() {
   };
 
   return (
-    <div className="todo-container">
+    <div className={styles.todoContainer}>
       <h2>Todo List</h2>
-      <form onSubmit={addTask}>
+      <form className={styles.form} onSubmit={addTask}>
         <input
           type="text"
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
           placeholder="Add a new task"
-          className="task-input"
+          className={styles.taskInput}
         />
-        <button type="submit" className="add-task-button">
+        <button type="submit" className={styles.addTaskButton}>
           Add Task
         </button>
-        <label for="userName">Name:</label>
+        <label htmlFor="userName">Name:</label>
         <input
           type="text"
           id="userName"
@@ -109,11 +120,11 @@ export default function TodoList() {
           onChange={(e) => setUserName(e.target.value)}
           className="user-name-input"
         />
-        <label for="selectedDate">Date:</label>
+        <label htmlFor="selectedDate">Date:</label>
         <DatePicker
           id="selectedDate"
           selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
+          onChange={(date: Date | null) => setSelectedDate(date)}
           className="date-picker"
         />
       </form>
@@ -121,7 +132,7 @@ export default function TodoList() {
         {tasks.map((task, index) => (
           <li
             key={task.id}
-            className={`task-item ${task.completed ? "completed" : ""} 
+            className={`${styles.taskItem} ${styles.taskItem.completed ? "completed" : ""} 
             ${draggedIndex === index ? "dragging" : ""}
             ${dragOverIndex === index ? "drag-over" : ""}`}
             draggable
@@ -137,9 +148,9 @@ export default function TodoList() {
               ☰
             </span>
             <span
-              className="task-text"
+              className={styles.taskText}
               contentEditable={!task.completed}
-              supressContentEditableWarning
+              suppressContentEditableWarning
               onBlur={(e) => {
                 if (!task.completed) {
                   editTask(index, e.target.textContent);
@@ -148,7 +159,7 @@ export default function TodoList() {
             >
               {task.text}
             </span>
-            <button onClick={() => deleteTask(index)} className="delete-button">
+            <button onClick={() => deleteTask(index)} className={styles.deleteButton}>
               Delete
             </button>
             <button onClick={() => toggleTask(index)} className="toggle-button">
@@ -167,3 +178,5 @@ export default function TodoList() {
     </div>
   );
 }
+
+export default TodoList;
