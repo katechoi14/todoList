@@ -1,20 +1,39 @@
 {
   "name": "react.dev",
   "version": "0.0.0",
-  "main": "/src/index.js",
+  "main": "/src/index.tsx",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-scripts": "^5.0.0",
-    "devextreme-react": "23.2.6",
+    "@types/react-router-dom": "^5.3.3",
     "devextreme": "23.2.6",
-    "react-datepicker": "6.9.0"
+    "devextreme-react": "23.2.6",
+    "next": "^14.2.4",
+    "react": "^18.0.0",
+    "react-datepicker": "^6.9.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.23.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "20.14.2",
+    "@types/react": "^18.3.3",
+    "@types/react-datepicker": "^6.2.0",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "5.4.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
