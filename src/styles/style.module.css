@@ -1,0 +1,94 @@
+.heading h2 {
+    text-align: center;
+    font-size: 10mm;
+    font: Georgia, Baskerville, Times New Roman;
+  }
+  
+  .todoContainer {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .formContainer form {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .taskInput {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .addTaskButton {
+    margin-left: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #222;
+    font-size: 16px;
+  }
+  
+  .addTaskButton:hover {
+    background-color: #218838;
+  }
+  
+  .taskList {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .taskItem {
+    display: flex;
+    align-items: center;
+  }
+  
+  .taskItem.completed .taskText  {
+    text-decoration: line-through;
+    color: #aaa;
+  }
+  
+  .deleteButton {
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    border: none;
+    background-color: #dc3545;
+    margin-left: 10px;
+  }
+  
+  .deleteButton:hover {
+    background-color: #c82333;
+  }
+  
+  .checkboxContainer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .checkboxContainer input {
+    display: none;
+  }
+  .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #eee;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+  }
+  
+  .taskText {
+    flex: 1;
+    margin-left: 10px;
+  }
