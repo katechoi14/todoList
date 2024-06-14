@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import ToDoList from '../components/ToDoList';
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <div>
       <h1>Welcome to the Todo App</h1>
