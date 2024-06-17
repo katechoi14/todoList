@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import styles from '../styles/style.module.css';
 
 interface Task {
   id: number;
@@ -99,42 +98,65 @@ const TodoList: React.FC = () => {
   };
 
   return (
-    <div className={styles.todoContainer}>
-      <h2 className={styles.heading}>Todo List</h2>
-      <form className={styles.form} onSubmit={addTask}>
-        <input
-          type="text"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add a new task"
-          className={styles.taskInput}
-        />
-        <button type="submit" className={styles.addTaskButton}>
-          Add Task
-        </button>
-        <label htmlFor="userName">Name:</label>
-        <input
-          type="text"
-          id="userName"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          className="user-name-input"
-        />
-        <label htmlFor="selectedDate">Date:</label>
-        <DatePicker
-          id="selectedDate"
-          selected={selectedDate}
-          onChange={(date: Date | null) => setSelectedDate(date)}
-          className="date-picker"
-        />
-      </form>
-      <ul className={styles.taskList}>
+    <div className="flex flex-col justify-center items-center overflow-x-hidden max-w-full">
+      <div className="text-center">
+        <h2 className="h-20 text-xl flex items-center justify-center">Todo List</h2>
+        <form className="items-center" onSubmit={addTask}>
+          <div className="w-72">
+            <div className="relative w-full min-w-[200px] h-10">
+              <input 
+                className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:bolder placeholder-shown:border-blue-gray-200 placeholder-shown: border border-gray-200 focus:border-gray-900 text-sm px-3 py-2.5 rounded-[7px]"
+                placeholder=" "
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+              />
+              <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                Task
+              </label>
+            </div>
+          </div>
+          <div className="flex justify-center items-center w-72 max-w-full mt-4">
+            <div className="relative w-full min-w-[200px] h-10">
+              <input 
+                type="text"
+                className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
+                placeholder=" "
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              <label htmlFor="userName" className="aflex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                Username
+              </label>
+            </div>
+          </div>
+          <div className="flex justify-center items-center w-72 max-w-full mt-6">
+            <div className="relative w-full min-w-[200px] h-11">
+              <DatePicker
+                id="selectedDate"
+                selected={selectedDate}
+                onChange={(date: Date | null) => setSelectedDate(date)}
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-0"
+              />
+              <label htmlFor="selectedDate" className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+              date</label>
+            </div>
+          </div>
+          <div className="flex justify-center items-center w-72 max-w-full mt-4">
+            <button 
+              type="submit"
+              className="text-base bg-transparent hover:bg-pinkpink text-pinkpink font-semibold hover:text-white py-2 px-4 border border-pinkpink hover:border-transparent rounded">
+              Add Task!
+            </button>
+          </div>
+        </form>
+      </div>
+      <ul className="list-none p-0 w-full max-w-full">
         {tasks.map((task, index) => (
           <li
             key={task.id}
-            className={`${styles.taskItem} ${task.completed ? styles.completedTask : ""} 
-            ${draggedIndex === index ? styles.dragging : ""}
-            ${dragOverIndex === index ? styles.dragOver : ""}`}
+            className={`flex items-center ${task.completed ? "line-through text-gray-400" : ""} 
+            ${draggedIndex === index ? "opacity-50" : ""}
+            ${dragOverIndex === index ? "border-dashed border-2 border-black" : ""}`}
             draggable
             onDragStart={(e) => handleDragStart(e, index)}
             onDragOver={(e) => handleDragOver(e, index)}
@@ -142,13 +164,12 @@ const TodoList: React.FC = () => {
             onDragEnd={handleDragEnd}
           >
             <span
-              className="toggle-indicator"
+              className="toggle-indicator cursor-pointer"
               onClick={() => toggleTask(index)}
             >
               ☰
             </span>
             <span
-              className={styles.taskText}
               contentEditable={!task.completed}
               suppressContentEditableWarning
               onBlur={(e) => {
@@ -156,27 +177,34 @@ const TodoList: React.FC = () => {
                   editTask(index, e.target.textContent);
                 }
               }}
+              className="flex-1 taskText"
             >
               {task.text}
             </span>
-            <button onClick={() => deleteTask(index)} className={styles.deleteButton}>
-              Delete
-            </button>
-            <button onClick={() => toggleTask(index)} className="toggle-button">
-              {task.completed ? "Undo" : "Done?"}
-            </button>
             <div className="userName">
-              <strong>Name:</strong> {task.userName}
+              <p>{task.userName}</p>
             </div>
             <div className="Date">
-              <strong>Date:</strong>{" "}
-              {task.date ? task.date.toLocaleDateString() : "Not Set"}
+              <p>{task.date ? task.date.toLocaleDateString() : ""}</p>
+            </div>
+            <div>
+              <button onClick={() => deleteTask(index)} 
+              className="text-base bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                delete
+              </button>
+            </div>
+            <div>
+              <button onClick={() => toggleTask(index)} 
+              className="text-base bg-white hover:bg-gray-200 text-black font-semibold py-2 px-4 border border-gray-200 rounded shadow">
+                {task.completed ? "Undo" : "Done?"}
+              </button>
             </div>
           </li>
         ))}
       </ul>
     </div>
   );
+  
 }
 
 export default TodoList;
