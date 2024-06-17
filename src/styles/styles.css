@@ -2,10 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-.taskText:focus {
-  outline: none;
-}
-
-.userName:focus {
-  outline: none;
-}
