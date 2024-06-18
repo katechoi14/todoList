@@ -1,11 +1,12 @@
 todoList is a website created with NextJS, using TypeScript and Tailwind CSS. 
 This web application introduces users to a simple and easy to-do list for their daily tasks.
 
-The four functionalities of todoList are:
+The five functionalities of todoList are:
 1. **Add** task with task name, username (the name of the person to complete the task), and the date it must be completed by.
 2. **Done?** to cross off the whole task once it's completed.
 3. **Delete** to get rid of any task if not needed anymore.
-4. **Toggling around** tasks to set priority.
+4. **Editing** tasks as needed.
+5. **Toggling around** tasks to set priority.
 
 
 In order to run this locally, you can first: 
