@@ -10,6 +10,7 @@
   "dependencies": {
     "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.4.19",
+    "axios": "^1.7.2",
     "devextreme": "23.2.6",
     "devextreme-react": "23.2.6",
     "flowbite": "^2.3.0",

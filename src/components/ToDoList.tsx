@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
+import { getTodos, addTodo, updateTodo, deleteTodo } from '../pages/api/tasks';
 
 interface Task {
-  id: number;
+  id: string;
   text: string;
   completed: boolean;
   userName: string;
@@ -18,7 +20,19 @@ const TodoList: React.FC = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  function addTask(e: React.FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await getTodos();
+        setTasks(response);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    fetchTasks();
+  }, []);
+
+  const addTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (newTask.trim() === "") {
@@ -27,43 +41,64 @@ const TodoList: React.FC = () => {
     }
 
     const newT: Task = {
-      id: new Date().getTime(),
+      id: new Date().getTime().toString(),
       text: newTask,
       completed: false,
       userName: userName,
       date: selectedDate,
     };
 
-    setTasks([...tasks, newT]);
-    setNewTask("");
-    setUserName("");
-    setSelectedDate(null);
-  }
-
-  const deleteTask = (index: number) => {
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
-  };
-
-  const toggleTask = (index: number) => {
-    const updatedTasks = [...tasks];
-    const toggledTask = updatedTasks[index];
-    toggledTask.completed = !toggledTask.completed;
-
-    if (toggledTask.completed) {
-      updatedTasks.splice(index, 1);
-      updatedTasks.unshift(toggledTask);
+    try {
+      const response = await addTodo({
+        title: newTask,
+        completed: false,
+        username: userName,
+        date: selectedDate ? selectedDate.toISOString() : undefined,
+      });
+      setTasks([...tasks, response]);
+      setNewTask("");
+      setUserName("");
+      setSelectedDate(null);
+    } catch (error) {
+      console.error("Cannot add task!", error);
     }
-
-    setTasks(updatedTasks);
   };
 
-  const editTask = (index: number, newText: string | null) => {
-    const updatedTasks = [...tasks];
+  const deleteTask = async (id: string) => {
+    try {
+      await deleteTodo(id);
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (error) {
+      console.error("Cannot delete task!", error);
+    }
+  };
+
+  const toggleTask = async (id: string) => {
+    try {
+      const task = tasks.find(task => task.id === id);
+      if (task) {
+        task.completed = !task.completed;
+        await updateTodo(id, task);
+        setTasks(tasks.map(t => (t.id === id ? task : t)));
+      }
+    } catch (error) {
+      console.error("Cannot toggle task!", error);
+    }
+  };
+
+  const editTask = async (id: string, newText: string | null) => {
     if (newText) {
-      updatedTasks[index].text = newText;
+      const task = tasks.find(task => task.id === id);
+      if (task) {
+        task.text = newText;
+        try {
+          await updateTodo(id, task);
+          setTasks(tasks.map(t => (t.id === id ? task : t)));
+        } catch (error) {
+          console.error("Cannot edit task!", error);
+        }
+      }
     }
-    setTasks(updatedTasks);
   };
 
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
@@ -148,62 +183,60 @@ const TodoList: React.FC = () => {
           </div>
         </form>
       </div>
-  <ul className="list-none p-0 w-full max-w-full">
-  {tasks.map((task, index) => (
-    <li
-      key={task.id}
-      className={`flex items-center border-b border-gray-200 py-3 ${task.completed ? "line-through text-gray-400" : ""} 
-      ${draggedIndex === index ? "opacity-50" : ""}
-      ${dragOverIndex === index ? "border-dashed border-2 border-black" : ""}`}
-      draggable
-      onDragStart={(e) => handleDragStart(e, index)}
-      onDragOver={(e) => handleDragOver(e, index)}
-      onDrop={(e) => handleDrop(e, index)}
-      onDragEnd={handleDragEnd}
-    >
-      <span
-        className="toggle-indicator cursor-pointer"
-        onClick={() => toggleTask(index)}
-      >
-        ☰
-      </span>
-      <span
-        contentEditable={!task.completed}
-        suppressContentEditableWarning
-        onBlur={(e) => {
-          if (!task.completed) {
-            editTask(index, e.target.textContent);
-          }
-        }}
-        className="flex-1 taskText break-all"
-      >
-        {task.text}
-      </span>
-      <div className="userName flex-1 border-l border-gray-200 pl-3">
-        <p>{task.userName}</p>
-      </div>
-      <div className="Date border-l border-gray-200 pl-3">
-        <p>{task.date ? task.date.toLocaleDateString() : ""}</p>
-      </div>
-      <div className="flex-1">
-        <button onClick={() => deleteTask(index)} 
-        className="text-base bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-          delete
-        </button>
-      </div>
-      <div className="flex-0">
-        <button onClick={() => toggleTask(index)} 
-        className="text-base bg-white hover:bg-gray-200 text-black font-semibold py-2 px-4 border border-gray-200 rounded shadow">
-          {task.completed ? "Undo" : "Done?"}
-        </button>
-      </div>
-    </li>
-  ))}
-</ul>
-</div>
-
+      <ul className="list-none p-0 w-full max-w-full">
+        {tasks.map((task, index) => (
+          <li
+            key={task.id}
+            className={`flex items-center border-b border-gray-200 py-3 ${task.completed ? "line-through text-gray-400" : ""} 
+            ${draggedIndex === index ? "opacity-50" : ""}
+            ${dragOverIndex === index ? "border-dashed border-2 border-black" : ""}`}
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDrop={(e) => handleDrop(e, index)}
+            onDragEnd={handleDragEnd}
+          >
+            <span
+              className="toggle-indicator cursor-pointer"
+              onClick={() => toggleTask(task.id)}
+            >
+              ☰
+            </span>
+            <span
+              contentEditable={!task.completed}
+              suppressContentEditableWarning
+              onBlur={(e) => {
+                if (!task.completed) {
+                  editTask(task.id, e.target.textContent);
+                }
+              }}
+              className="flex-1 taskText break-all"
+            >
+              {task.text}
+            </span>
+            <div className="userName flex-1 border-l border-gray-200 pl-3">
+              <p>{task.userName}</p>
+            </div>
+            <div className="Date border-l border-gray-200 pl-3">
+              <p>{task.date ? task.date.toLocaleDateString() : ""}</p>
+            </div>
+            <div className="flex-1">
+              <button onClick={() => deleteTask(task.id)} 
+              className="text-base bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                delete
+              </button>
+            </div>
+            <div className="flex-0">
+              <button onClick={() => toggleTask(task.id)} 
+              className="text-base bg-white hover:bg-gray-200 text-black font-semibold py-2 px-4 border border-gray-200 rounded shadow">
+                {task.completed ? "Undo" : "Done?"}
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
-  
 }
 
 export default TodoList;
