@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
 import { getTodos, addTodo, updateTodo, deleteTodo } from '../pages/api/tasks';
 
 interface Task {
   id: string;
-  text: string;
+  title: string;
   completed: boolean;
   userName: string;
   date: Date | null;
@@ -20,11 +19,16 @@ const TodoList: React.FC = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await getTodos();
-        setTasks(response);
+        const tasksWithDates = response.map((task: any) => ({
+          ...task,
+          date: task.date ? new Date(task.date) : null,
+        }));
+        setTasks(tasksWithDates);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
@@ -40,20 +44,12 @@ const TodoList: React.FC = () => {
       return;
     }
 
-    const newT: Task = {
-      id: new Date().getTime().toString(),
-      text: newTask,
-      completed: false,
-      userName: userName,
-      date: selectedDate,
-    };
-
     try {
       const response = await addTodo({
         title: newTask,
         completed: false,
-        username: userName,
-        date: selectedDate ? selectedDate.toISOString() : undefined,
+        userName,
+        date: selectedDate,
       });
       setTasks([...tasks, response]);
       setNewTask("");
@@ -77,9 +73,9 @@ const TodoList: React.FC = () => {
     try {
       const task = tasks.find(task => task.id === id);
       if (task) {
-        task.completed = !task.completed;
-        await updateTodo(id, task);
-        setTasks(tasks.map(t => (t.id === id ? task : t)));
+        const updatedTask = { ...task, completed: !task.completed };
+        await updateTodo(id, updatedTask);
+        setTasks(tasks.map(t => (t.id === id ? updatedTask : t)));
       }
     } catch (error) {
       console.error("Cannot toggle task!", error);
@@ -90,10 +86,10 @@ const TodoList: React.FC = () => {
     if (newText) {
       const task = tasks.find(task => task.id === id);
       if (task) {
-        task.text = newText;
+        const updatedTask = { ...task, title: newText };
         try {
-          await updateTodo(id, task);
-          setTasks(tasks.map(t => (t.id === id ? task : t)));
+          await updateTodo(id, updatedTask);
+          setTasks(tasks.map(t => (t.id === id ? updatedTask : t)));
         } catch (error) {
           console.error("Cannot edit task!", error);
         }
@@ -212,13 +208,13 @@ const TodoList: React.FC = () => {
               }}
               className="flex-1 taskText break-all"
             >
-              {task.text}
+              {task.title}
             </span>
             <div className="userName flex-1 border-l border-gray-200 pl-3">
               <p>{task.userName}</p>
             </div>
             <div className="Date border-l border-gray-200 pl-3">
-              <p>{task.date ? task.date.toLocaleDateString() : ""}</p>
+              <p>{task.date ? new Date(task.date).toLocaleDateString() : ""}</p>
             </div>
             <div className="flex-1">
               <button onClick={() => deleteTask(task.id)} 
