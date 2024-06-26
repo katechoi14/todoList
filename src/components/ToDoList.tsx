@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 
 interface Task {
@@ -44,13 +45,17 @@ const TodoList: React.FC = () => {
       return;
     }
 
+    const newId = uuidv4();
+
     try {
       const response = await axios.post('/api/tasks', {
+        id: newId,
         title: newTask,
         completed: false,
-        userName,
+        userName: userName,
         date: selectedDate,
       });
+      
       setTasks([...tasks, response.data]);
       setNewTask("");
       setUserName("");
@@ -62,7 +67,7 @@ const TodoList: React.FC = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      await axios.delete(`/api/tasks?id=${id}`);
+      await axios.delete(`/api/tasks/${id}`);
       setTasks(tasks.filter(task => task.id !== id));
     } catch (error) {
       console.error("Cannot delete task!", error);
@@ -74,7 +79,7 @@ const TodoList: React.FC = () => {
       const task = tasks.find(task => task.id === id);
       if (task) {
         const updatedTask = { ...task, completed: !task.completed };
-        const response = await axios.put(`/api/tasks`, { id, ...updatedTask });
+        const response = await axios.put(`/api/tasks/${id}`, updatedTask);
         setTasks(tasks.map(t => (t.id === id ? response.data : t)));
       }
     } catch (error) {
@@ -88,7 +93,7 @@ const TodoList: React.FC = () => {
       if (task) {
         const updatedTask = { ...task, title: newText };
         try {
-          const response = await axios.put(`/api/tasks`, { id, ...updatedTask });
+          const response = await axios.put(`/api/tasks/${id}`, { id, ...updatedTask });
           setTasks(tasks.map(t => (t.id === id ? response.data : t)));
         } catch (error) {
           console.error("Cannot edit task!", error);
