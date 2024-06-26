@@ -20,12 +20,11 @@ const TodoList: React.FC = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(`${process.env.CMS_URL}/api/tasks`);
-        const tasksWithDates = response.data.docs.map((task: any) => ({
+        const tasksWithDates = response.data.tasks.map((task: any) => ({
           ...task,
           date: task.date ? new Date(task.date) : null,
         }));
@@ -39,14 +38,12 @@ const TodoList: React.FC = () => {
 
   const addTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (newTask.trim() === "") {
       alert("New task cannot be empty!");
       return;
     }
 
     try {
-      // change addTodo() to include axios and CMS_URL as well 
       const response = await axios.post(`${process.env.CMS_URL}/api/tasks`, {
         title: newTask,
         completed: false,
@@ -64,7 +61,6 @@ const TodoList: React.FC = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      // change deleteTodo() to include axios and CMS URL 
       await axios.delete(`${process.env.CMS_URL}/api/tasks?id=${id}`);
       setTasks(tasks.filter(task => task.id !== id));
     } catch (error) {
