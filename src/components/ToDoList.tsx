@@ -52,7 +52,7 @@ const TodoList: React.FC = () => {
         id: newId,
         title: newTask,
         completed: false,
-        userName: userName,
+        userName,
         date: selectedDate,
       });
       

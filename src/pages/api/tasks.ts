@@ -1,17 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
+const CMS_URL = process.env.CMS_URL;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case 'GET':
-        const response = await axios.get('http://localhost:3001/api/tasks');
+        const response = await axios.get(`${CMS_URL}/api/tasks`);
         res.status(200).json(response.data);
         break;
       case 'POST':
         const newTask = req.body;
-        const createResponse = await axios.post('http://localhost:3001/api/tasks', newTask);
+        const createResponse = await axios.post(`${CMS_URL}/api/tasks`, newTask);
         res.status(201).json(createResponse.data);
         break;
       case 'PUT':
