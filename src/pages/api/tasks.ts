@@ -95,22 +95,22 @@ const deleteTask = (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export const getTodos = async () => {
-    const response = await axios.get('/api/tasks');
+    const response = await axios.get(`${process.env.CMS_URL}/api/tasks`);
     return response.data;
 };
 
 export const addTodo = async (task: Omit<Task, 'id'>) => {
-    const response = await axios.post('/api/tasks', task);
+    const response = await axios.post(`${process.env.CMS_URL}/api/tasks`, task);
     return response.data;
 };
 
 export const updateTodo = async (id: string, updatedTask: Task) => {
-    const response = await axios.put('/api/tasks', { id, ...updatedTask });
+    const response = await axios.put(`${process.env.CMS_URL}/api/tasks`, { id, ...updatedTask });
     return response.data;
 };
 
 export const deleteTodo = async (id: string) => {
-    const response = await axios.delete(`/api/tasks?id=${id}`);
+    const response = await axios.delete(`${process.env.CMS_URL}/api/tasks?id=${id}`);
     return response.data;
 }
 

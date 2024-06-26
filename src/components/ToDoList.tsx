@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getTodos, addTodo, updateTodo, deleteTodo } from '../pages/api/tasks';
+import axios from 'axios';
+
 
 interface Task {
   id: string;
@@ -23,8 +24,8 @@ const TodoList: React.FC = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await getTodos();
-        const tasksWithDates = response.map((task: any) => ({
+        const response = await axios.get(`${process.env.CMS_URL}/api/tasks`);
+        const tasksWithDates = response.data.docs.map((task: any) => ({
           ...task,
           date: task.date ? new Date(task.date) : null,
         }));
@@ -45,13 +46,14 @@ const TodoList: React.FC = () => {
     }
 
     try {
-      const response = await addTodo({
+      // change addTodo() to include axios and CMS_URL as well 
+      const response = await axios.post(`${process.env.CMS_URL}/api/tasks`, {
         title: newTask,
         completed: false,
         userName,
         date: selectedDate,
       });
-      setTasks([...tasks, response]);
+      setTasks([...tasks, response.data]);
       setNewTask("");
       setUserName("");
       setSelectedDate(null);
@@ -62,7 +64,8 @@ const TodoList: React.FC = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      await deleteTodo(id);
+      // change deleteTodo() to include axios and CMS URL 
+      await axios.delete(`${process.env.CMS_URL}/api/tasks?id=${id}`);
       setTasks(tasks.filter(task => task.id !== id));
     } catch (error) {
       console.error("Cannot delete task!", error);
@@ -74,8 +77,8 @@ const TodoList: React.FC = () => {
       const task = tasks.find(task => task.id === id);
       if (task) {
         const updatedTask = { ...task, completed: !task.completed };
-        await updateTodo(id, updatedTask);
-        setTasks(tasks.map(t => (t.id === id ? updatedTask : t)));
+        const response = await axios.put(`${process.env.CMS_URL}/api/tasks`, { id, ...updatedTask });
+        setTasks(tasks.map(t => (t.id === id ? response.data : t)));
       }
     } catch (error) {
       console.error("Cannot toggle task!", error);
@@ -88,8 +91,8 @@ const TodoList: React.FC = () => {
       if (task) {
         const updatedTask = { ...task, title: newText };
         try {
-          await updateTodo(id, updatedTask);
-          setTasks(tasks.map(t => (t.id === id ? updatedTask : t)));
+          const response = await axios.put(`${process.env.CMS_URL}/api/tasks`, { id, ...updatedTask });
+          setTasks(tasks.map(t => (t.id === id ? response.data : t)));
         } catch (error) {
           console.error("Cannot edit task!", error);
         }
