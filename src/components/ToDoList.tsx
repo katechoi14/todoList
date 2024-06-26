@@ -12,6 +12,7 @@ interface Task {
   date: Date | null;
 }
 
+
 const TodoList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState<string>("");
@@ -23,7 +24,7 @@ const TodoList: React.FC = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(`${process.env.CMS_URL}/api/tasks`);
+        const response = await axios.get('/api/tasks');
         const tasksWithDates = response.data.tasks.map((task: any) => ({
           ...task,
           date: task.date ? new Date(task.date) : null,
@@ -44,7 +45,7 @@ const TodoList: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.CMS_URL}/api/tasks`, {
+      const response = await axios.post('/api/tasks', {
         title: newTask,
         completed: false,
         userName,
@@ -61,7 +62,7 @@ const TodoList: React.FC = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      await axios.delete(`${process.env.CMS_URL}/api/tasks?id=${id}`);
+      await axios.delete(`/api/tasks?id=${id}`);
       setTasks(tasks.filter(task => task.id !== id));
     } catch (error) {
       console.error("Cannot delete task!", error);
@@ -73,7 +74,7 @@ const TodoList: React.FC = () => {
       const task = tasks.find(task => task.id === id);
       if (task) {
         const updatedTask = { ...task, completed: !task.completed };
-        const response = await axios.put(`${process.env.CMS_URL}/api/tasks`, { id, ...updatedTask });
+        const response = await axios.put(`/api/tasks`, { id, ...updatedTask });
         setTasks(tasks.map(t => (t.id === id ? response.data : t)));
       }
     } catch (error) {
@@ -87,7 +88,7 @@ const TodoList: React.FC = () => {
       if (task) {
         const updatedTask = { ...task, title: newText };
         try {
-          const response = await axios.put(`${process.env.CMS_URL}/api/tasks`, { id, ...updatedTask });
+          const response = await axios.put(`/api/tasks`, { id, ...updatedTask });
           setTasks(tasks.map(t => (t.id === id ? response.data : t)));
         } catch (error) {
           console.error("Cannot edit task!", error);
@@ -95,6 +96,7 @@ const TodoList: React.FC = () => {
       }
     }
   };
+
 
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
     setDraggedIndex(index);
