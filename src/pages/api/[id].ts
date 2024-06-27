@@ -9,6 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
       case 'PUT':
         const updatedTask = req.body;
+        console.log(updatedTask);
         const updateResponse = await axios.put(`${CMS_URL}/api/tasks/${id}`, updatedTask);
         res.status(200).json(updateResponse.data);
         break;

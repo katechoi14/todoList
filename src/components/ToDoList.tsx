@@ -25,7 +25,6 @@ const TodoList: React.FC = () => {
       try {
         const response = await axios.get('/api/tasks');
         const { docs } = response.data;
-        console.log(docs);
         setTasks(docs);
       } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -51,7 +50,6 @@ const TodoList: React.FC = () => {
         username: userName,
         date: selectedDate,
       });
-      console.log(response.data);
       setTasks([...tasks, response.data]);
       setNewTask('');
       setUserName('');
@@ -182,7 +180,7 @@ const TodoList: React.FC = () => {
       </div>
       <ul className="list-none p-0 w-full max-w-full">
         {tasks.map((task, index) => (
-          <li
+          <li 
             key={task.id}
             className={`flex items-center border-b border-gray-200 py-3 ${task.completed ? "line-through text-gray-400" : ""} 
             ${draggedIndex === index ? "opacity-50" : ""}
@@ -193,13 +191,13 @@ const TodoList: React.FC = () => {
             onDrop={(e) => handleDrop(e, index)}
             onDragEnd={handleDragEnd}
           >
-            <span
+            <span key={`${task.id}-toggle`}
               className="toggle-indicator cursor-pointer"
               onClick={() => toggleTask(task.id)}
             >
               ☰
             </span>
-            <span
+            <span key={`${task.id}-title`}
               contentEditable={!task.completed}
               suppressContentEditableWarning
               onBlur={(e) => {
@@ -211,10 +209,12 @@ const TodoList: React.FC = () => {
             >
               {task.title}
             </span>
-            <div className="userName flex-1 border-l border-gray-200 pl-3">
+            <div key={`${task.id}-username`}
+              className="userName flex-1 border-l border-gray-200 pl-3">
               <p>{task.username}</p>
             </div>
-            <div className="Date border-l border-gray-200 pl-3">
+            <div key={`${task.id}-date`}
+              className="Date border-l border-gray-200 pl-3">
               <p>{task.date ? new Date(task.date).toLocaleDateString() : ""}</p>
             </div>
             <div className="flex-1">
