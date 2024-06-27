@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 
 interface Task {
   id: string;
@@ -40,16 +39,16 @@ const TodoList: React.FC = () => {
       return;
     }
 
-    const newId = uuidv4();
+    const newT: Task = {
+      id: new Date().getTime().toString(),
+      title: newTask,
+      completed: false,
+      username: userName,
+      date: selectedDate,
+    };
 
     try {
-      const response = await axios.post('/api/tasks', {
-        id: newId,
-        title: newTask,
-        completed: false,
-        username: userName,
-        date: selectedDate,
-      });
+      const response = await axios.post('/api/tasks', newT);
       setTasks([...tasks, response.data]);
       setNewTask('');
       setUserName('');
@@ -181,7 +180,7 @@ const TodoList: React.FC = () => {
       <ul className="list-none p-0 w-full max-w-full">
         {tasks.map((task, index) => (
           <li 
-            key={task.id}
+            key={`${task.id}`}
             className={`flex items-center border-b border-gray-200 py-3 ${task.completed ? "line-through text-gray-400" : ""} 
             ${draggedIndex === index ? "opacity-50" : ""}
             ${dragOverIndex === index ? "border-dashed border-2 border-black" : ""}`}
@@ -218,7 +217,7 @@ const TodoList: React.FC = () => {
               <p>{task.date ? new Date(task.date).toLocaleDateString() : ""}</p>
             </div>
             <div className="flex-1">
-              <button onClick={() => deleteTask(task.id)} 
+              <button onClick={() => deleteTask(`${task.id}`)} 
               className="text-base bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                 delete
               </button>
