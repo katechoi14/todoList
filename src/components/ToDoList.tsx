@@ -25,11 +25,7 @@ const TodoList: React.FC = () => {
       try {
         const response = await axios.get('/api/tasks');
         const { docs } = response.data;
-        const tasksWithDates = docs.map((task: any) => ({
-          ...task,
-          date: task.date ? new Date(task.date) : null,
-        }));
-        setTasks(tasksWithDates);
+        setTasks(docs);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
