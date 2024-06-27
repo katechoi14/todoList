@@ -12,7 +12,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         break;
       case 'POST':
         const newTask = req.body;
-        console.log('New Task:', newTask); 
         const createResponse = await axios.post(`${CMS_URL}/api/tasks`, newTask);
         res.status(201).json(createResponse.data);
         break;

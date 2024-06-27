@@ -8,7 +8,7 @@ interface Task {
   id: string;
   title: string;
   completed: boolean;
-  userName: string;
+  username: string;
   date: Date | null;
 }
 
@@ -25,6 +25,7 @@ const TodoList: React.FC = () => {
       try {
         const response = await axios.get('/api/tasks');
         const { docs } = response.data;
+        console.log(docs);
         setTasks(docs);
       } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -47,9 +48,10 @@ const TodoList: React.FC = () => {
         id: newId,
         title: newTask,
         completed: false,
-        userName: userName,
+        username: userName,
         date: selectedDate,
       });
+      console.log(response.data);
       setTasks([...tasks, response.data]);
       setNewTask('');
       setUserName('');
@@ -210,7 +212,7 @@ const TodoList: React.FC = () => {
               {task.title}
             </span>
             <div className="userName flex-1 border-l border-gray-200 pl-3">
-              <p>{task.userName}</p>
+              <p>{task.username}</p>
             </div>
             <div className="Date border-l border-gray-200 pl-3">
               <p>{task.date ? new Date(task.date).toLocaleDateString() : ""}</p>
