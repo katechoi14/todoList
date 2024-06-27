@@ -4,7 +4,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-
 interface Task {
   id: string;
   title: string;
@@ -13,11 +12,10 @@ interface Task {
   date: Date | null;
 }
 
-
 const TodoList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
+  const [newTask, setNewTask] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -26,13 +24,14 @@ const TodoList: React.FC = () => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get('/api/tasks');
-        const tasksWithDates = response.data.tasks.map((task: any) => ({
+        const { docs } = response.data;
+        const tasksWithDates = docs.map((task: any) => ({
           ...task,
           date: task.date ? new Date(task.date) : null,
         }));
         setTasks(tasksWithDates);
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        console.error('Error fetching tasks:', error);
       }
     };
     fetchTasks();
@@ -40,8 +39,8 @@ const TodoList: React.FC = () => {
 
   const addTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newTask.trim() === "") {
-      alert("New task cannot be empty!");
+    if (newTask.trim() === '') {
+      alert('New task cannot be empty!');
       return;
     }
 
@@ -52,16 +51,15 @@ const TodoList: React.FC = () => {
         id: newId,
         title: newTask,
         completed: false,
-        userName,
+        userName: userName,
         date: selectedDate,
       });
-      
       setTasks([...tasks, response.data]);
-      setNewTask("");
-      setUserName("");
+      setNewTask('');
+      setUserName('');
       setSelectedDate(null);
     } catch (error) {
-      console.error("Cannot add task!", error);
+      console.error('Cannot add task!', error);
     }
   };
 
@@ -70,7 +68,7 @@ const TodoList: React.FC = () => {
       await axios.delete(`/api/tasks/${id}`);
       setTasks(tasks.filter(task => task.id !== id));
     } catch (error) {
-      console.error("Cannot delete task!", error);
+      console.error('Cannot delete task!', error);
     }
   };
 
@@ -83,7 +81,7 @@ const TodoList: React.FC = () => {
         setTasks(tasks.map(t => (t.id === id ? response.data : t)));
       }
     } catch (error) {
-      console.error("Cannot toggle task!", error);
+      console.error('Cannot toggle task!', error);
     }
   };
 
@@ -96,12 +94,11 @@ const TodoList: React.FC = () => {
           const response = await axios.put(`/api/tasks/${id}`, { id, ...updatedTask });
           setTasks(tasks.map(t => (t.id === id ? response.data : t)));
         } catch (error) {
-          console.error("Cannot edit task!", error);
+          console.error('Cannot edit task!', error);
         }
       }
     }
   };
-
 
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>, index: number) => {
     setDraggedIndex(index);
