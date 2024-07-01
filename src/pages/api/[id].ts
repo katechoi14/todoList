@@ -5,6 +5,7 @@ const CMS_URL = process.env.CMS_URL;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
+  console.log(`Received DELETE request for task with id: ${id}`);
   try {
     switch (req.method) {
       case 'PUT':

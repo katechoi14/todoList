@@ -23,14 +23,16 @@ const TodoList: React.FC = () => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get('/api/tasks');
-        const { docs } = response.data;
-        setTasks(docs);
+        const tasksOnly = response.data.docs;
+        console.log(tasksOnly);
+        setTasks(tasksOnly);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
     };
     fetchTasks();
   }, []);
+
 
   const addTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,17 +41,16 @@ const TodoList: React.FC = () => {
       return;
     }
 
-    const newT: Task = {
-      id: new Date().getTime().toString(),
+    const newT = {
       title: newTask,
       completed: false,
       username: userName,
       date: selectedDate,
     };
-
     try {
       const response = await axios.post('/api/tasks', newT);
-      setTasks([...tasks, response.data]);
+      console.log('API response:', response);
+      setTasks((prevTasks) => [...prevTasks, response.data]);
       setNewTask('');
       setUserName('');
       setSelectedDate(null);
@@ -190,13 +191,13 @@ const TodoList: React.FC = () => {
             onDrop={(e) => handleDrop(e, index)}
             onDragEnd={handleDragEnd}
           >
-            <span key={`${task.id}-toggle`}
+            <span 
               className="toggle-indicator cursor-pointer"
               onClick={() => toggleTask(task.id)}
             >
               ☰
             </span>
-            <span key={`${task.id}-title`}
+            <span 
               contentEditable={!task.completed}
               suppressContentEditableWarning
               onBlur={(e) => {
@@ -208,16 +209,16 @@ const TodoList: React.FC = () => {
             >
               {task.title}
             </span>
-            <div key={`${task.id}-username`}
+            <div 
               className="userName flex-1 border-l border-gray-200 pl-3">
               <p>{task.username}</p>
             </div>
-            <div key={`${task.id}-date`}
+            <div 
               className="Date border-l border-gray-200 pl-3">
               <p>{task.date ? new Date(task.date).toLocaleDateString() : ""}</p>
             </div>
             <div className="flex-1">
-              <button onClick={() => deleteTask(`${task.id}`)} 
+              <button onClick={() => deleteTask(task.id)} 
               className="text-base bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                 delete
               </button>
