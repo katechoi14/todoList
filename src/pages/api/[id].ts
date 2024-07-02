@@ -1,19 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import qs from 'qs';
 
 const CMS_URL = process.env.CMS_URL;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  
+  // chnange w the payload cms
   const { id } = req.query;
-  console.log(`Received DELETE request for task with id: ${id}`);
   try {
     switch (req.method) {
       case 'PUT':
         const updatedTask = req.body;
-        const updateResponse = await axios.put(`${CMS_URL}/api/tasks/${id}`, updatedTask);
+        const updateUrl = `${CMS_URL}/api/tasks/${qs.stringify({ id })}`;
+        const updateResponse = await axios.put(updateUrl, updatedTask);
         res.status(200).json(updateResponse.data);
         break;
       case 'DELETE':
+        const deleteUrl = `${CMS_URL}/api/tasks/${qs.stringify({ id})}`;
         await axios.delete(`${CMS_URL}/api/tasks/${id}`);
         res.status(204).end();
         break;

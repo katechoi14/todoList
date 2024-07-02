@@ -4,6 +4,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 
 interface Task {
+  // data structure 
+  // doc 
   id: string;
   title: string;
   completed: boolean;
@@ -24,7 +26,6 @@ const TodoList: React.FC = () => {
       try {
         const response = await axios.get('/api/tasks');
         const tasksOnly = response.data.docs;
-        console.log(tasksOnly);
         setTasks(tasksOnly);
       } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -49,8 +50,7 @@ const TodoList: React.FC = () => {
     };
     try {
       const response = await axios.post('/api/tasks', newT);
-      console.log('API response:', response);
-      setTasks((prevTasks) => [...prevTasks, response.data]);
+      setTasks((prevTasks) => [...prevTasks, response.data.doc]);
       setNewTask('');
       setUserName('');
       setSelectedDate(null);
