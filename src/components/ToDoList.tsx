@@ -72,7 +72,7 @@ const TodoList: React.FC = () => {
       if (task) {
         const updatedTask = { ...task, completed: !task.completed };
         const response = await axios.put(`/api/tasks/${id}`, updatedTask);
-        setTasks(tasks.map(t => (t.id === id ? response.data : t)));
+        setTasks(tasks.map(t => (t.id === id ? response.data.doc : t)));
       }
     } catch (error) {
       console.error('Cannot toggle task!', error);
@@ -86,7 +86,7 @@ const TodoList: React.FC = () => {
         const updatedTask = { ...task, title: newText };
         try {
           const response = await axios.put(`/api/tasks/${id}`, { id, ...updatedTask });
-          setTasks(tasks.map(t => (t.id === id ? response.data : t)));
+          setTasks(tasks.map(t => (t.id === id ? response.data.doc : t)));
         } catch (error) {
           console.error('Cannot edit task!', error);
         }
