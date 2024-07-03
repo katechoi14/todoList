@@ -4,8 +4,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 
 interface Task {
-  // data structure 
-  // doc 
   id: string;
   title: string;
   completed: boolean;
@@ -62,12 +60,12 @@ const TodoList: React.FC = () => {
   const deleteTask = async (id: string) => {
     try {
       await axios.delete(`/api/tasks/${id}`);
-      setTasks(tasks.filter(task => task.id !== id));
+      setTasks((prevTasks) => prevTasks.filter(task => task.id !== id));
     } catch (error) {
       console.error('Cannot delete task!', error);
     }
   };
-
+  
   const toggleTask = async (id: string) => {
     try {
       const task = tasks.find(task => task.id === id);
@@ -80,7 +78,7 @@ const TodoList: React.FC = () => {
       console.error('Cannot toggle task!', error);
     }
   };
-
+  
   const editTask = async (id: string, newText: string | null) => {
     if (newText) {
       const task = tasks.find(task => task.id === id);
