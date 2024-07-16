@@ -1,24 +1,35 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import qs from 'qs';
 
 const CMS_URL = process.env.CMS_URL;
+const API_KEY = process.env.API_KEY;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;  
   try {
     switch (req.method) {
       case 'GET':
-        const response = await axios.get(`${CMS_URL}/api/tasks`);
+        const response = await axios.get(`${CMS_URL}/api/tasks`, {
+          headers: {
+            'Authorization': `Api-key ${API_KEY}`
+          }
+        });
         res.status(200).json(response.data);
         break;
       case 'POST':
         const newTask = req.body;
-        const createResponse = await axios.post(`${CMS_URL}/api/tasks`, newTask);
-        res.status(201).json(createResponse.data);
+        try {
+          const createResponse = await axios.post(`${CMS_URL}/api/tasks`, newTask, {
+            headers: {
+              'Authorization': `Api-key ${API_KEY}`
+            }
+          });
+          res.status(201).json(createResponse.data);
+        } catch (error) {
+          res.status(500).json({ url: `${CMS_URL}/api/tasks`, newTask, error });
+        }
         break;
       default:
-        res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
+        res.setHeader('Allow', ['GET', 'POST']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {

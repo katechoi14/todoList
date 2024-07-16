@@ -39,14 +39,13 @@ const TodoList: React.FC = () => {
       alert('New task cannot be empty!');
       return;
     }
-
-    const newT = {
-      title: newTask,
-      completed: false,
-      username: userName,
-      date: selectedDate,
-    };
     try {
+      const newT = {
+        title: newTask,
+        completed: false,
+        username: userName,
+        date: selectedDate,
+      };
       const response = await axios.post('/api/tasks', newT);
       setTasks((prevTasks) => [...prevTasks, response.data.doc]);
       setNewTask('');
@@ -179,7 +178,7 @@ const TodoList: React.FC = () => {
       <ul className="list-none p-0 w-full max-w-full">
         {tasks.map((task, index) => (
           <li 
-            key={`${task.id}`}
+            key={task.id}
             className={`flex items-center border-b border-gray-200 py-3 ${task.completed ? "line-through text-gray-400" : ""} 
             ${draggedIndex === index ? "opacity-50" : ""}
             ${dragOverIndex === index ? "border-dashed border-2 border-black" : ""}`}
