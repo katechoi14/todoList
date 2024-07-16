@@ -1,11 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import qs from 'qs';
+import { validateKey } from '../middleware';
 
 const CMS_URL = process.env.CMS_URL;
 const API_KEY = process.env.API_KEY;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  validateKey(req, res, async() => {
   const { id } = req.query;  
   try {
     switch (req.method) {
@@ -21,7 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const putUrl = `${CMS_URL}/api/tasks/${id}${stringifiedQuery}`;
         const updateResponse = await axios.put(putUrl, updatedTask, {
           headers: {
-            Authorization: `Api-key ${API_KEY}`
+            Authorization: "Api-key my-secret-key"
           }
         });
         res.status(200).json(updateResponse.data);
@@ -37,7 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const deleteUrl = `${CMS_URL}/api/tasks/${id}${stringified}`;
         await axios.delete(deleteUrl, {
           headers: {
-            Authorization: `Api-key ${API_KEY}`
+            Authorization: "Api-key my-secret-key"
           }
         });
         res.status(204).end();
@@ -50,4 +52,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
+})
 };
