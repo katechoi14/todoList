@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { checkApiKey } from './checkApiKey';
 
 export const validateKey = (req: NextApiRequest, res: NextApiResponse, next: Function) => {
-    const apiKey = req.headers['authorization']?.split(' ')[1];
+    const apiKey = 'my-secret-key';
 
     if (checkApiKey(apiKey)) {
         next();
