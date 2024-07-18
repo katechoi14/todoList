@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [accessToken, setAccessToken] = useState<string | null>(null);
 
-    const handleLogin = async (e) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${API_URL}/users/login`, {
+            const response = await axios.post('/api/users/login', { 
                 email, password
             });
-            const { token } = response.data;
-            localStorage.setItem('accessToken', token);
+            setAccessToken(response.data.accessToken);
+            localStorage.setItem('accessToken', response.data.accessToken);
+            alert('Login successful!');
         } catch (error) {
-            setError('Invalid email or password');
+            console.error('Error logging in:', error);
+            alert('Login failed!');
         }
     };
 
     return (
         <form onSubmit={handleLogin} className="space-y-12 w-full sm:w-[400px]">
             <div className="grid w-full items-center gap-1.5">
+                <label htmlFor="email">Email:</label>
                 <input 
                 type="email"
                 value={email}
@@ -35,8 +36,10 @@ const LoginForm = () => {
             />
             </div>
             <div className="grid w-full items-center gap-1.5">
+                <label htmlFor="password">Password:</label>
                 <input
                 type="password"
+                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
@@ -44,11 +47,8 @@ const LoginForm = () => {
             />
             </div>
         <button className="w-full" type="submit">Login</button>
-        {error && <p>{error}</p>}
         </form>
     );
 };
 
 export default LoginForm;
-
-

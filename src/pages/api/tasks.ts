@@ -5,13 +5,18 @@ import { validateKey } from './middleware';
 const CMS_URL = process.env.CMS_URL;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  validateKey(req, res, async() => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized'});
+  }
+
     try {
       switch (req.method) {
         case 'GET':
           const response = await axios.get(`${CMS_URL}/api/tasks`, {
             headers: {
-              Authorization: "Api-key my-secret-key"
+              Authorization: `Bearer ${token}`
             }
           });
           res.status(200).json(response.data);
@@ -21,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           try {
             const createResponse = await axios.post(`${CMS_URL}/api/tasks`, newTask, {
               headers: {
-                Authorization: "Api-key my-secret-key"
+                Authorization: `Bearer ${token}`
               }
             });
             res.status(201).json(createResponse.data);
@@ -37,5 +42,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
-})
 };
