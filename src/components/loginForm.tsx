@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
+
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -58,6 +60,11 @@ const LoginForm = () => {
                         <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Login!
                         </button>
+                        <div> 
+                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                Don't have an account yet? <a href="/registerpage" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                            </p>
+                        </div>
                     </form>
             </div>
         </div>

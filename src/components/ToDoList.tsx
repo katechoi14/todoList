@@ -21,19 +21,12 @@ const TodoList: React.FC = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
         try { 
-          const response = await axios.get('/api/tasks', {
-            headers: { 
-              Authorization: `Bearer ${token}`
-            }
-          });
+          const response = await axios.get('/api/tasks');
           setTasks(response.data.docs);
         } catch (error) {
           console.error('Error fetching tasks:', error);
         }
-      }
     };
     fetchTasks();
   }, []);

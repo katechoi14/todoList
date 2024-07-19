@@ -5,11 +5,6 @@ import qs from 'qs';
 const CMS_URL = process.env.CMS_URL;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
   const { id } = req.query;  
   try {
     switch (req.method) {
@@ -25,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const putUrl = `${CMS_URL}/api/tasks/${id}${stringifiedQuery}`;
         const updateResponse = await axios.put(putUrl, updatedTask, {
           headers: {
-            Authorization: `Bearer ${token}`
+            "Content-Type": 'application/json',
           }
         });
         res.status(200).json(updateResponse.data);
@@ -41,7 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const deleteUrl = `${CMS_URL}/api/tasks/${id}${stringified}`;
         await axios.delete(deleteUrl, {
           headers: {
-            Authorization: `Bearer ${token}`
+            "Content-Type": 'application/json',
           }
         });
         res.status(204).end();

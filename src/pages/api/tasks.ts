@@ -1,22 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import { validateKey } from './middleware';
 
 const CMS_URL = process.env.CMS_URL;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const token = req.headers.authorization?.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized'});
-  }
-
     try {
       switch (req.method) {
         case 'GET':
           const response = await axios.get(`${CMS_URL}/api/tasks`, {
             headers: {
-              Authorization: `Bearer ${token}`
+              "Content-Type": 'application/json',
             }
           });
           res.status(200).json(response.data);
@@ -26,7 +19,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           try {
             const createResponse = await axios.post(`${CMS_URL}/api/tasks`, newTask, {
               headers: {
-                Authorization: `Bearer ${token}`
+                "Content-Type": 'application/json',
               }
             });
             res.status(201).json(createResponse.data);
