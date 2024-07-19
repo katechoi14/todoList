@@ -5,7 +5,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const { email, password } = req.body;
     try {
-      const response = await axios.post(`${process.env.CMS_URL}/users/register`, {
+      const response = await axios.post(`${process.env.CMS_URL}/users/`, {
         email,
         password,
       });
