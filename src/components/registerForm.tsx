@@ -12,14 +12,23 @@ interface User {
 const RegisterForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            alert('Passwords are not the same!');
+        }
+
         try {
-            await axios.post('/api/users', { email, password });
+
+            const response = await axios.post('/api/users', { email, password });
+            const { token } = response.data;
+            localStorage.setItem('token', token);
             alert('Registration successful!');
         } catch (error) {
-            console.error('Error registering:', error);
+            console.error('Error registering:', error.response ? error.response.data : error.message);
             alert('Registration failed!');
         }
     };
@@ -53,6 +62,20 @@ const RegisterForm = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
+                        className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        required
+                        />
+                    </div>
+                    <div className='mb-4'>
+                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                            Confirm Password
+                        </label>
+                        <input 
+                        type="password"
+                        id="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-enter your password"
                         className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
                         />

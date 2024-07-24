@@ -6,10 +6,6 @@ const CMS_URL = process.env.CMS_URL;
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
-      case 'GET':
-        const response = await axios.get(`${CMS_URL}/api/users`
-        );
-        res.status(200).json(response.data);
       case 'POST':
         const newUser = req.body;
         const newResponse = await axios.post(`${CMS_URL}/api/users`, newUser, {

@@ -6,7 +6,6 @@ import Link from 'next/link';
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [accessToken, setAccessToken] = useState<string | null>(null);
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -15,8 +14,12 @@ const LoginForm = () => {
             const response = await axios.post('/api/users/login', { 
                 email, password
             });
-            setAccessToken(response.data.accessToken);
-            localStorage.setItem('accessToken', response.data.accessToken);
+            const { token } = response.data;
+            localStorage.setItem('token', token);
+            if (token.email ) {
+
+            }
+                // check if the email is already in the api
             alert('Login successful!');
         } catch (error) {
             console.error('Error logging in:', error);
