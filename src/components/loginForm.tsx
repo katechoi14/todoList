@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -16,10 +18,7 @@ const LoginForm = () => {
             });
             const { token } = response.data;
             localStorage.setItem('token', token);
-            if (token.email ) {
-
-            }
-                // check if the email is already in the api
+            router.push('/todo');
             alert('Login successful!');
         } catch (error) {
             console.error('Error logging in:', error);

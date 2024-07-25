@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse ) => {
         if (req.method === 'POST') {
             const { email, password } = req.body;
 
-            const response = await axios.post(`${CMS_URL}/api/auth/local/login`, { email, password }, {
+            const response = await axios.post(`${CMS_URL}/api/users/login`, { email, password }, {
                 headers: {
                     "Content-Type": "application/json",
                 },

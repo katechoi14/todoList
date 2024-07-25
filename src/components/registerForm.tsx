@@ -3,12 +3,6 @@ import axios from 'axios';
 import loginpage from '../pages/loginpage';
 import Link from 'next/link';
 
-
-interface User {
-    id: string,
-    email: string,
-    password: string,
-}
 const RegisterForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,17 +13,17 @@ const RegisterForm = () => {
 
         if (password !== confirmPassword) {
             alert('Passwords are not the same!');
+            return;
         }
 
         try {
-
             const response = await axios.post('/api/users', { email, password });
             const { token } = response.data;
             localStorage.setItem('token', token);
             alert('Registration successful!');
         } catch (error) {
             console.error('Error registering:', error.response ? error.response.data : error.message);
-            alert('Registration failed!');
+            alert("Registration failed!");
         }
     };
 
@@ -72,7 +66,7 @@ const RegisterForm = () => {
                         </label>
                         <input 
                         type="password"
-                        id="password"
+                        id="confirmPassword"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Re-enter your password"
