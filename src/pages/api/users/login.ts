@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
 const CMS_URL = process.env.CMS_URL;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async (req: NextApiRequest, res: NextApiResponse ) => {
     try {
@@ -13,7 +15,10 @@ export default async (req: NextApiRequest, res: NextApiResponse ) => {
                     "Content-Type": "application/json",
                 },
             });
-            res.status(200).json(response.data);
+
+            const { user } = response.data;
+            const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1hr' });
+            res.status(200).json({ token });
         } else {
             res.setHeader('Allow', ['POST']);
             res.status(405).end(`Method ${req.method} Not Allowed`);

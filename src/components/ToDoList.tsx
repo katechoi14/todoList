@@ -7,7 +7,7 @@ interface Task {
   id: string;
   title: string;
   completed: boolean;
-  username: string;
+  user: string;
   date: Date | null;
 }
 
@@ -19,10 +19,17 @@ const TodoList: React.FC = () => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
+  const getAuthToken = () => localStorage.getItem('token');
+
   useEffect(() => {
     const fetchTasks = async () => {
         try { 
-          const response = await axios.get('/api/tasks');
+          const token = getAuthToken();
+          const response = await axios.get('/api/tasks', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           setTasks(response.data.docs);
         } catch (error) {
           console.error('Error fetching tasks:', error);
@@ -39,13 +46,18 @@ const TodoList: React.FC = () => {
       return;
     }
     try {
+      const token = getAuthToken();
       const newT = {
         title: newTask,
         completed: false,
         username: userName,
         date: selectedDate,
       };
-      const response = await axios.post('/api/tasks', newT);
+      const response = await axios.post('/api/tasks', newT, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       setTasks((prevTasks) => [...prevTasks, response.data.doc]);
       setNewTask('');
       setUserName('');
@@ -57,7 +69,12 @@ const TodoList: React.FC = () => {
 
   const deleteTask = async (id: string) => {
     try {
-      await axios.delete(`/api/tasks/${id}`);
+      const token = getAuthToken();
+      await axios.delete(`/api/tasks/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       setTasks((prevTasks) => prevTasks.filter(task => task.id !== id));
     } catch (error) {
       console.error('Cannot delete task!', error);
@@ -66,10 +83,15 @@ const TodoList: React.FC = () => {
   
   const toggleTask = async (id: string) => {
     try {
+      const token = getAuthToken();
       const task = tasks.find(task => task.id === id);
       if (task) {
         const updatedTask = { ...task, completed: !task.completed };
-        const response = await axios.put(`/api/tasks/${id}`, updatedTask);
+        const response = await axios.put(`/api/tasks/${id}`, updatedTask, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         setTasks(tasks.map(t => (t.id === id ? response.data.doc : t)));
       }
     } catch (error) {
@@ -83,7 +105,12 @@ const TodoList: React.FC = () => {
       if (task) {
         const updatedTask = { ...task, title: newText };
         try {
-          const response = await axios.put(`/api/tasks/${id}`, { id, ...updatedTask });
+          const token = getAuthToken();
+          const response = await axios.put(`/api/tasks/${id}`, { id, ...updatedTask }, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
           setTasks(tasks.map(t => (t.id === id ? response.data.doc : t)));
         } catch (error) {
           console.error('Cannot edit task!', error);

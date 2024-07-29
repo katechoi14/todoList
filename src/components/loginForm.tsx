@@ -16,10 +16,12 @@ const LoginForm = () => {
             const response = await axios.post('/api/users/login', { 
                 email, password
             });
-            const { token } = response.data;
+            const { token, userId } = response.data;
             localStorage.setItem('token', token);
+            localStorage.setItem('userId', userId);
             router.push('/todo');
             alert('Login successful!');
+            console.log({ token, userId });
         } catch (error) {
             console.error('Error logging in:', error);
             alert('Login failed!');

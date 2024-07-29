@@ -17,8 +17,17 @@ const RegisterForm = () => {
         }
 
         try {
+            const checkEmailResponse = await axios.post('/api/check-email', { email });
+            if (checkEmailResponse.data.exists) {
+                alert('Email is already registered!');
+                return;
+            }
+
+
+
             const response = await axios.post('/api/users', { email, password });
             const { token } = response.data;
+            console.log(token);
             localStorage.setItem('token', token);
             alert('Registration successful!');
         } catch (error) {

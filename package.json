@@ -15,6 +15,7 @@
     "devextreme-react": "23.2.6",
     "flowbite": "^2.3.0",
     "flowbite-datepicker": "^1.2.7",
+    "jsonwebtoken": "^9.0.2",
     "next": "^14.2.4",
     "payload": "^2.22.1",
     "postcss": "^8.4.38",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@catppuccin/tailwindcss": "^0.1.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "20.14.2",
     "@types/qs": "^6.9.15",
     "@types/react": "^18.3.3",
